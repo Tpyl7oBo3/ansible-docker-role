@@ -1,0 +1,28 @@
+---
+- name: install dependes
+  ansible.builtin.apt:
+    name: "{{dependes_packages}}"
+    state: present
+    update_cache: yes
+  
+- name: gpg key add
+  shell: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc"
+  
+- name: add docker repo
+  apt_repository:
+    repo: "{{docker_repo}}"
+    state: present
+    filename: docker
+    update_cache: true
+- name: install docker
+  ansible.builtin.apt:
+    name: "{{docker_packages}}"
+    state: present
+    update_cache: yes
+  
+
+- name: adding user to docker group
+  user:
+    name: "{{ansible_user}}"
+    groups: docker
+    append: yes
